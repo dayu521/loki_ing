@@ -61,8 +61,8 @@ struct C1:C
 ```cpp
 Loki::ConcreteFactory<Loki::AbstractFactory<LOKI_TYPELIST_3(A,B,C)>,
 	Loki::OpNewFactoryUnit,
-	LOKI_TYPELIST_3(A1,B1,C1)> factory;
-auto a1=factory.Create<C>();
+	LOKI_TYPELIST_3(A1,B1,C1)> factory;	
+auto a1=factory.Create<C>();	//直接通过new 产生对象
 auto a2=factory.Create<A>();
 auto a2=factory.Create<B>();
 ```
@@ -71,21 +71,21 @@ auto a2=factory.Create<B>();
 
 ```cpp
 Loki::ConcreteFactory<Loki::AbstractFactory<LOKI_TYPELIST_3(A,B,C)>,Loki::PrototypeFactoryUnit> factory;
-Loki::DoSetPrototype<A>(factory,new A1);
-Loki::DoSetPrototype<C>(factory,new C1);
-Loki::DoSetPrototype<B>(factory,new B1);
-auto a1=factory.Create<C>();
+Loki::DoSetPrototype<A>(factory,new A1);	//注册原型对象
+Loki::DoSetPrototype<C>(factory,new C1);	//..
+Loki::DoSetPrototype<B>(factory,new B1);	//..
+auto a1=factory.Create<C>();	//通过Clone虚函数返回克隆的对象
 auto a2=factory.Create<A>();
 auto a2=factory.Create<B>();
 ```
 
 > 我们可以在`PrototypeFactoryUnit`中发现SetPrototype模板函数,好像我们可以
 >
-> factory.SetPrototype<A>(new A1);
+> `factory.SetPrototype<A>(new A1);`
 >
 > 但我们只能设置最后一个类型,在这种情况下是
 >
-> factory.SetPrototype<C>(new C1);
+> `factory.SetPrototype<C>(new C1);`
 >
 > 因为类型推断只推断为C兼容的`PrototypeFactoryUnit`,所以我们继承来修改`PrototypeFactoryUnit`类
 
